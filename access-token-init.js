@@ -65,7 +65,7 @@ function setAccessToken({
 		};
 		pm.sendRequest(
 			{
-				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?` + querystring.stringify(query),
+				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?${querystring.stringify(query)}`,
 				method: 'POST'
 			},
 			function (err, res) {
