@@ -32,9 +32,9 @@ function setAccessToken({
 	key,
 	refresh_token,
 	dc,
-	client_id = DEFAULT_CLIENT_CONFIG[dc].client_id,
-	client_secret = DEFAULT_CLIENT_CONFIG[dc].client_secret,
-    callback = undefined
+	client_id,
+	client_secret,
+    	callback = undefined
 }) {
 	const ACCESS_TOKEN_KEY = `${key}_ACCESS_TOKEN`;
 	const AUTH_META_KEY = `${key}_AUTH_META`;
