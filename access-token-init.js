@@ -1,3 +1,5 @@
+const querystring = require('querystring');
+
 const DEFAULT_CLIENT_CONFIG = {
 	US: {
 		domain: 'accounts.zoho.com'
@@ -63,7 +65,7 @@ function setAccessToken({
 		};
 		pm.sendRequest(
 			{
-				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?` + getQpAsString(query),
+				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?` + querystring.stringify(query),
 				method: 'POST'
 			},
 			function (err, res) {
@@ -82,15 +84,5 @@ function setAccessToken({
 				}
 			}
 		);
-	}
-	function getQpAsString(qp) {
-		let ans = '';
-		for (const [key, value] of Object.entries(qp)) {
-			ans += `&${key}=${value}`;
-		}
-		if (ans[0] == '&') {
-			ans = ans.substring(1);
-		}
-		return ans;
 	}
 }
