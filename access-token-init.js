@@ -19,6 +19,12 @@ const DEFAULT_CLIENT_CONFIG = {
 	JP: {
 		domain: 'accounts.zoho.jp'
 	},
+	CA: {
+		domain: 'accounts.zohocloud.ca'
+	},
+    	UK: {
+		domain: 'accounts.zoho.uk'
+	},
 	LOCALZOHO: {
 		domain: 'accounts.localzoho.com'
 	},
@@ -27,7 +33,7 @@ const DEFAULT_CLIENT_CONFIG = {
 	}
 };
 
-// dc: ['US', 'EU', 'CN', 'IN', 'AU', 'LOCALZOHO', 'CSEZ']
+// dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
 function setAccessToken({
 	key,
 	refresh_token,
