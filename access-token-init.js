@@ -36,6 +36,7 @@ const DEFAULT_CLIENT_CONFIG = {
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
 function setAccessToken({ key, refresh_token, dc, client_id, client_secret, auth_header = false }) {
+	console.log(auth_header);
 	const AUTH_META_KEY = `${key}_AUTH_META`;
 
 	const access_token = pm.collectionVariables.get(key);
