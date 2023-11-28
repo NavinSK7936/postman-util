@@ -34,10 +34,10 @@ const DEFAULT_CLIENT_CONFIG = {
 };
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
-function setAccessToken({ ACCESS_TOKEN_KEY, refresh_token, dc, client_id, client_secret, callback = undefined }) {
-	const AUTH_META_KEY = `${ACCESS_TOKEN_KEY}_AUTH_META`;
+function setAccessToken({ key, refresh_token, dc, client_id, client_secret, callback = undefined }) {
+	const AUTH_META_KEY = `${key}_AUTH_META`;
 
-	const access_token = pm.collectionVariables.get(ACCESS_TOKEN_KEY);
+	const access_token = pm.collectionVariables.get(key);
 	if (access_token == undefined) {
 		request();
 	} else {
@@ -78,7 +78,7 @@ function setAccessToken({ ACCESS_TOKEN_KEY, refresh_token, dc, client_id, client
 							last_refresh_token: refresh_token
 						});
 
-					pm.collectionVariables.set(ACCESS_TOKEN_KEY, access_token);
+					pm.collectionVariables.set(key, access_token);
 					pm.collectionVariables.set(AUTH_META_KEY, meta);
 
 					callback?.(access_token);
