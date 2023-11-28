@@ -1,3 +1,4 @@
+
 const querystring = require('querystring');
 
 const DEFAULT_CLIENT_CONFIG = {
@@ -34,7 +35,7 @@ const DEFAULT_CLIENT_CONFIG = {
 };
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
-function setAccessToken({ key, refresh_token, dc, client_id, client_secret, callback = undefined }) {
+function setAccessToken({ key, refresh_token, dc, client_id, client_secret, set_auth = false }) {
 	const AUTH_META_KEY = `${key}_AUTH_META`;
 
 	const access_token = pm.collectionVariables.get(key);
@@ -53,7 +54,12 @@ function setAccessToken({ key, refresh_token, dc, client_id, client_secret, call
 		if (didAccessTokenExpire || areRefreshTokensDiff) {
 			request();
 		} else {
-			callback?.(access_token);
+			if (set_auth) {
+				pm.request.headers.add({
+					key: 'Authorization',
+					value: `Zoho-oauthtoken ${access_token}`
+				});
+			}
 		}
 	}
 
@@ -81,7 +87,12 @@ function setAccessToken({ key, refresh_token, dc, client_id, client_secret, call
 					pm.collectionVariables.set(key, access_token);
 					pm.collectionVariables.set(AUTH_META_KEY, meta);
 
-					callback?.(access_token);
+					if (set_auth) {
+						pm.request.headers.add({
+							key: 'Authorization',
+							value: `Zoho-oauthtoken ${access_token}`
+						});
+					}
 				} else if (err) {
 					console.error(err);
 				}
