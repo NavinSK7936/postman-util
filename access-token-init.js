@@ -1,3 +1,4 @@
+
 const querystring = require('querystring');
 
 const DEFAULT_CLIENT_CONFIG = {
@@ -22,7 +23,7 @@ const DEFAULT_CLIENT_CONFIG = {
 	CA: {
 		domain: 'accounts.zohocloud.ca'
 	},
-    	UK: {
+	UK: {
 		domain: 'accounts.zoho.uk'
 	},
 	LOCALZOHO: {
@@ -35,21 +36,19 @@ const DEFAULT_CLIENT_CONFIG = {
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
 function setAccessToken({
-	key,
+	ACCESS_TOKEN_KEY,
 	refresh_token,
 	dc,
-	client_id,
-	client_secret,
-    	callback = undefined
+	client_id = DEFAULT_CLIENT_CONFIG[dc].client_id,
+	client_secret = DEFAULT_CLIENT_CONFIG[dc].client_secret,
+	callback = undefined
 }) {
-	const ACCESS_TOKEN_KEY = `${key}_ACCESS_TOKEN`;
-	const AUTH_META_KEY = `${key}_AUTH_META`;
-
-    const access_token = pm.collectionVariables.get(ACCESS_TOKEN_KEY);
+	const AUTH_META_KEY = `${ACCESS_TOKEN_KEY}_AUTH_META`;
+	const access_token = pm.collectionVariables.get(ACCESS_TOKEN_KEY);
 	if (access_token == undefined) {
 		request();
 	} else {
-        const TOKEN_EXPIRY_TIME = 60 * 60 * 1000;
+		const TOKEN_EXPIRY_TIME = 60 * 60 * 1000;
 		const authMetaDetails = JSON.parse(pm.collectionVariables.get(AUTH_META_KEY));
 
 		const lastUpdatedTime = authMetaDetails['last_update_time'];
@@ -61,38 +60,38 @@ function setAccessToken({
 		if (didAccessTokenExpire || areRefreshTokensDiff) {
 			request();
 		} else {
-            callback?.(access_token);
-        }
+			callback?.(access_token);
+		}
 	}
 
 	function request() {
-        const query = {
-            client_id: client_id,
-            client_secret: client_secret,
-            refresh_token: refresh_token,
-            grant_type: 'refresh_token'
-        };
+		const query = {
+			client_id: client_id,
+			client_secret: client_secret,
+			refresh_token: refresh_token,
+			grant_type: 'refresh_token'
+		};
 		pm.sendRequest(
 			{
-				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?${querystring.stringify(query)}`,
+				url: `https://${DC_DOMAIN_MAP[dc]}/oauth/v2/token?${querystring.stringify(query)}`,
 				method: 'POST'
 			},
 			function (err, res) {
-                if (res) {
-                    const data = res.json(),
-                        access_token = data.access_token,
-                        meta = JSON.stringify({
-                            last_update_time: Date.now(),
-                            last_refresh_token: refresh_token
-                        });
+				if (res) {
+					const data = res.json(),
+						access_token = data.access_token,
+						meta = JSON.stringify({
+							last_update_time: Date.now(),
+							last_refresh_token: refresh_token
+						});
 
-                    pm.collectionVariables.set(ACCESS_TOKEN_KEY, access_token);
-                    pm.collectionVariables.set(AUTH_META_KEY, meta);
+					pm.collectionVariables.set(ACCESS_TOKEN_KEY, access_token);
+					pm.collectionVariables.set(AUTH_META_KEY, meta);
 
-                    callback?.(access_token);
-                } else if (err) {
-                    console.error(err);
-                }
+					callback?.(access_token);
+				} else if (err) {
+					console.error(err);
+				}
 			}
 		);
 	}
