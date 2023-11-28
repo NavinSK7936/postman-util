@@ -1,4 +1,3 @@
-
 const querystring = require('querystring');
 
 const DEFAULT_CLIENT_CONFIG = {
@@ -35,15 +34,9 @@ const DEFAULT_CLIENT_CONFIG = {
 };
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
-function setAccessToken({
-	ACCESS_TOKEN_KEY,
-	refresh_token,
-	dc,
-	client_id = DEFAULT_CLIENT_CONFIG[dc].client_id,
-	client_secret = DEFAULT_CLIENT_CONFIG[dc].client_secret,
-	callback = undefined
-}) {
+function setAccessToken({ ACCESS_TOKEN_KEY, refresh_token, dc, client_id, client_secret, callback = undefined }) {
 	const AUTH_META_KEY = `${ACCESS_TOKEN_KEY}_AUTH_META`;
+
 	const access_token = pm.collectionVariables.get(ACCESS_TOKEN_KEY);
 	if (access_token == undefined) {
 		request();
@@ -73,7 +66,7 @@ function setAccessToken({
 		};
 		pm.sendRequest(
 			{
-				url: `https://${DC_DOMAIN_MAP[dc]}/oauth/v2/token?${querystring.stringify(query)}`,
+				url: `https://${DEFAULT_CLIENT_CONFIG[dc].domain}/oauth/v2/token?${querystring.stringify(query)}`,
 				method: 'POST'
 			},
 			function (err, res) {
