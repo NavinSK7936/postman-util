@@ -35,7 +35,7 @@ const DEFAULT_CLIENT_CONFIG = {
 };
 
 // dc: ['US', 'EU', 'CN', 'IN', 'AU', 'JP', 'CA', 'UK', 'LOCALZOHO', 'CSEZ']
-function setAccessToken({ key, refresh_token, dc, client_id, client_secret, auth_header = false }) {
+function setAccessToken({ key, refresh_token, dc, client_id, client_secret, set_header = false }) {
 	const AUTH_META_KEY = `${key}_AUTH_META`;
 	const access_token = pm.collectionVariables.get(key);
 	
@@ -54,7 +54,7 @@ function setAccessToken({ key, refresh_token, dc, client_id, client_secret, auth
 		if (didAccessTokenExpire || areRefreshTokensDiff) {
 			request();
 		} else {
-			if (auth_header) {
+			if (set_header) {
 				pm.request.headers.add({
 					key: 'Authorization',
 					value: `Zoho-oauthtoken ${access_token}`
@@ -87,7 +87,7 @@ function setAccessToken({ key, refresh_token, dc, client_id, client_secret, auth
 					pm.collectionVariables.set(key, access_token);
 					pm.collectionVariables.set(AUTH_META_KEY, meta);
 
-					if (auth_header) {
+					if (set_header) {
 						pm.request.headers.add({
 							key: 'Authorization',
 							value: `Zoho-oauthtoken ${access_token}`
